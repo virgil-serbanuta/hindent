@@ -1241,29 +1241,53 @@ stmt (Qualifier _ e@(InfixApp _ a op b)) =
   do col <- fmap (psColumn . snd)
                  (sandbox (write ""))
      infixApp e a op b (Just col)
-stmt (Generator _ p e) =
-  do indentSpaces <- getIndentSpaces
-     pretty p
-     indented indentSpaces
-              (dependOrNewline
-                 (write " <-")
+stmt (Qualifier _ e) = pretty e
+stmt (Generator _ p e) = do
+  indentSpaces <- getIndentSpaces
+  pretty p
+  indented
+    indentSpaces
+    (case opChainThenDo e of
+       Just (chain, lastOp, stmts) -> do
+         mstate <-
+           fitsOnOneLine
+             (do write " <- "
+                 spaced
+                   (map
+                      (\link ->
+                          case link of
+                            OpChainExp e' -> pretty e'
+                            OpChainLink qop -> pretty qop)
+                      chain)
                  space
-                 e
-                 pretty)
-stmt x = case x of
-           Generator _ p e ->
-             depend (do pretty p
-                        write " <- ")
-                    (pretty e)
-           Qualifier _ e -> pretty e
-           LetStmt _ binds ->
-             depend (write "let ")
-                    (pretty binds)
-           RecStmt{} ->
-             error "FIXME: No implementation for RecStmt."
+                 pretty lastOp
+                 space
+                 write "do")
+         case mstate of
+           Just st -> do
+             put st
+             newline
+             lined (map pretty stmts)
+           Nothing -> dependOrNewline (write " <-") space e pretty
+       Nothing -> dependOrNewline (write " <-") space e pretty)
+stmt (LetStmt _ binds) = depend (write "let ") (pretty binds)
+stmt (RecStmt {}) = error "FIXME: No implementation for RecStmt."
 
--- | Make the right hand side dependent if it fits on one line,
--- otherwise send it to the next line.
+-- | Try to extract a chain of operators which ends in <op> <do>.
+-- E.g. foo $ bar * mu >> x $ do hello; world
+-- would yield
+-- => ([foo,$,bar,*,mu,>>,x],$,do hello; world)
+opChainThenDo :: Exp NodeInfo
+              -> Maybe ([OpChainLink NodeInfo], QOp NodeInfo, [Stmt NodeInfo])
+opChainThenDo e =
+  case last2 links of
+    [OpChainLink op, OpChainExp (Do _ stmts)] -> Just (butlast2 links, op, stmts)
+    _ -> Nothing
+  where
+    links = flattenOpChain e
+    last2 xs = drop (length xs - 2) xs
+    butlast2 xs = take (length xs - 2) xs
+
 dependOrNewline
   :: Printer ()
   -> Printer ()
@@ -1627,31 +1651,42 @@ infixApp :: Exp NodeInfo
          -> Exp NodeInfo
          -> Maybe Int64
          -> Printer ()
-infixApp e a op b indent =
-  do msg <-
-          fitsOnOneLine
-            (spaced (map (\link ->
-                            case link of
-                              OpChainExp e' -> pretty e'
-                              OpChainLink qop -> pretty qop)
-                         (flattenOpChain e)))
-     case msg of
-       Nothing -> do prettyWithIndent a
-                     space
-                     pretty op
-                     newline
-                     case indent of
-                       Nothing -> prettyWithIndent b
-                       Just col ->
-                         do indentSpaces <- getIndentSpaces
-                            column (col + indentSpaces)
-                                   (prettyWithIndent b)
-       Just st -> put st
-  where prettyWithIndent e' =
-          case e' of
-            (InfixApp _ a' op' b') ->
-              infixApp e' a' op' b' indent
-            _ -> pretty e'
+infixApp e a op b indent = do
+  msg <-
+    fitsOnOneLine
+      (spaced
+         (map
+            (\link ->
+                case link of
+                  OpChainExp e' -> pretty e'
+                  OpChainLink qop -> pretty qop)
+            (flattenOpChain e)))
+  case msg of
+    Nothing ->
+      case b of
+        Do _ dos -> do
+          prettyWithIndent a
+          space
+          pretty op
+          space
+          swing (write "do")
+                 (lined (map pretty dos))
+        _ -> do
+          prettyWithIndent a
+          space
+          pretty op
+          newline
+          case indent of
+            Nothing -> prettyWithIndent b
+            Just col -> do
+              indentSpaces <- getIndentSpaces
+              column (col + indentSpaces) (prettyWithIndent b)
+    Just st -> put st
+  where
+    prettyWithIndent e' =
+      case e' of
+        (InfixApp _ a' op' b') -> infixApp e' a' op' b' indent
+        _ -> pretty e'
 
 -- | A link in a chain of operator applications.
 data OpChainLink l

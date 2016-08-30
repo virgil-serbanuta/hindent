@@ -434,6 +434,24 @@ main = putStrLn "Hello, World!"
 
 # Regression tests
 
+bitemyapp 'do' keyword gets moved to next indent, pushing things further out #219
+
+``` haskell
+getCurationTaskR :: UUID -> Handler Html
+getCurationTaskR uuid = do
+  researcher <- requireResearcher
+  (maybeJob, maybeCompany, claimCheck) <- runDB $ foobar $$ do
+    Just (Entity taskKey task) <- fetchThingByField JobTaskUuid uuid
+    return x
+  (maybeJob, maybeCompany, claimCheck, foobar) <- runDB $ foobar $$ bob % bill $ do
+    Just (Entity taskKey task) <- fetchThingByField JobTaskUuid uuid
+    return x
+  foo $ do
+    bob
+    bill
+  return y
+```
+
 jml Adds trailing whitespace when wrapping #221
 
 ``` haskell
