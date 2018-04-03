@@ -1,0 +1,221 @@
+module Data.Kore.Parser.ParserImpl where
+
+import           Data.Kore.AST.Common
+import           Data.Kore.AST.Kore
+import           Data.Kore.AST.MetaOrObject
+import qualified Data.Kore.ASTVerifier.SentenceVerifier as SentenceVerifier
+import           Data.Kore.HaskellExtensions            (Rotate31(..), (<....>))
+import           Data.Kore.IndentingPrinter             (PrinterOutput,
+                                                         StringPrinter,
+                                                         betweenLines,
+                                                         printToString,
+                                                         withIndent, write)
+
+instance
+    Typeable var
+     => UnifiedThing (UnifiedVariable var) var
+  where
+    destructor (MetaVariable v)   = Left v
+    destructor (ObjectVariable v) = Right v
+    metaConstructor = MetaVariable
+    objectConstructor = ObjectVariable
+
+class ( Ord (UnifiedVariable var)
+      , Show (var Object)
+      , Show (var Meta)
+      , Typeable var
+      ) =>
+      VariableClass var
+  where
+    getVariableSort :: MetaOrObject level => var level -> Sort level
+    -- ^Retrieves the sort of the variable
+    getVariableHash :: var level -> Int
+    -- ^Computes a hash identifying the variable
+
+{-|'withSort' transforms an 'UnsortedPatternStub' in a 'SortedPatternStub'.
+-}
+withSort
+    :: Sort level
+    -> PatternStub level variable child
+    -> PatternStub level variable child
+withSort s (UnsortedPatternStub p) =
+    SortedPatternStub SortedPattern
+        { sortedPatternPattern = p s
+        , sortedPatternSort = s
+        }
+withSort
+    s
+    p@(SortedPatternStub SortedPattern {sortedPatternSort = existingSort})
+  =
+    if s == existingSort
+        then p
+        else error
+            (  "Unmatched sorts: "
+            ++ show s ++ " and " ++ show existingSort ++ "."
+            )
+
+deriving instance
+    (Eq child, Eq (variable level))
+     => Eq (Pattern level variable child)
+
+deriving instance Functor (Pattern level variable)
+
+-- TODO(virgil): Use a generic command line parsing library instead.
+parseCommandLineFlags :: [String] -> CommandLineFlags
+parseCommandLineFlags [] =
+    CommandLineFlags
+        { commandLineFlagsFileName = Nothing
+        , commandLineFlagsVerify = True
+        , commandLineFlagsPrint = True
+        }
+parseCommandLineFlags (('-':'-':firstFlag):commandLineReminder) =
+    addFlagAndContinue firstFlag commandLineReminder
+
+safeChr :: Int -> Either String Char
+safeChr i =
+    if i <= ord (maxBound :: Char)
+        then return (chr i)
+        else Left
+            (  "Character code "
+            ++ show i ++ " outside of the representable codes."
+            )
+
+firstOrderLogicWithEqualityAxioms =
+    [ let forallFormula = 3
+       in 4
+    ]
+
+firstOrderLogicWithEqualityAxiomsC
+    -- comment
+ =
+    [ let forallFormula = 3
+       in 4
+    ]
+
+firstOrderLogicWithEqualityAxiomsD -- comment
+ =
+    [ let forallFormula = 3
+       in 4
+    ]
+
+firstOrderLogicWithEqualityAxiomsE
+    verifies
+    the
+    weldefinedness
+    the
+    given
+    attributes
+    verifies1
+    the1
+    weldefinedness1
+    of1
+    the1
+    given1
+    attributes1
+    -- comment
+  =
+    [ let forallFormula = 3
+       in 4
+    ]
+
+{-|'verifyAttributes' verifies the weldefinedness of the given attributes.
+-}
+verifyAttributes
+    :: KoreAttributes
+    -> KoreIndexedModule
+    -- ^ Module with the declarations visible in these atributes.
+    -> Set.Set UnifiedSortVariable
+    -- ^ Sort variables visible in these atributes.
+    -> AttributesVerification
+    -> Either (Error VerifyError) VerifySuccess
+verifyAttributes
+    (Attributes patterns) indexedModule sortVariables VerifyAttributes
+  = do
+    withContext
+        "attributes"
+        (mapM_
+             (\p -> verifyPattern p Nothing indexedModule sortVariables)
+             patterns)
+    verifySuccess
+verifyAttributes
+    (Attributes patterns)
+    indexedModule
+    sortVariablessortVariablessortVariables
+    DoNotVerifyAttributes
+  =
+    let indentation
+            | inCase = indentSpaces
+            | otherwise = max 2 indentSpaces
+     in indentation
+
+data Pattern level variable child where
+    AndPattern :: !(And level child) -> Pattern level variable child
+    ApplicationPattern
+        :: !(Application level child) -> Pattern level variable child
+    ApplicationPattern2
+        :: !(Application level child)
+        -> !(Application level child)
+        -> !(Application level child)
+        -> Pattern level variable child
+    NextPattern
+        :: !(Next Object child)
+        -> Pattern Object variable child Object variable child Object variable child
+
+sortVariableParser
+    :: MetaOrObject level
+    => level -- ^ Distinguishes between the meta and non-meta elements.
+    -> Parser (SortVariable level)
+sortVariableParser x = SortVariable <$> idParser x
+
+s   :: MetaOrObject level
+    => level -- ^ Distinguishes between the meta and non-meta elements.
+    -> Parser (SortVariable level)
+s x = SortVariable <$> idParser x
+
+sortVariableParser1 :: MetaOrObject level
+sortVariableParser1 x = SortVariable <$> idParser x
+
+sortVariableParser2, sortVariableParser3 :: MetaOrObject level
+sortVariableParser2 x = SortVariable <$> idParser x
+
+sortVariableParser4, sortVariableParser5, sortVariableParser6, sortVariableParser7, sortVariableParser8
+    :: MetaOrObject level
+sortVariableParser4 x = SortVariable <$> idParser x
+
+data Object = Object
+    deriving (Show, Eq, Ord, Typeable)
+
+newtype Id level = Id { getId :: String }
+    deriving (Show, Eq, Ord, Typeable)
+
+data SymbolOrAlias level = SymbolOrAlias
+    { symbolOrAliasConstructor :: !(Id level)
+    , symbolOrAliasParams      :: ![Sort level]
+    }
+    deriving (Show, Eq, Ord, Typeable)
+
+data SymbolOrAlias level = SymbolOrAlias
+    { symbolOrAliasConstructor :: !(Id level)
+    , symbolOrAliasParams
+          :: MetaOrObject level => level -> Parser (SortVariable level)
+    , symbolOrAliasParams2
+          :: MetaOrObject level
+          => level
+          -> Parser (SortVariable level)
+          -> Parser (SortVariable level)
+    , symbolOrAliasParams3
+          :: MetaOrObject level
+          => level
+          -> Parser (SortVariable level)
+          -> Parser (SortVariable level)
+          -> Parser (SortVariable level)
+    , symbolOrAliasParam4 :: level -> Parser (SortVariable level)
+    , symbolOrAliasParams5
+          :: level -> Parser (SortVariable level) -> Parser (SortVariable level)
+    , symbolOrAliasParams6
+          :: level
+          -> Parser (SortVariable level)
+          -> Parser (SortVariable level)
+          -> Parser (SortVariable level)
+    }
+    deriving (Show, Eq, Ord, Typeable)
