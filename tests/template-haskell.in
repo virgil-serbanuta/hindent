@@ -1,0 +1,11 @@
+-- Expression brackets
+
+add1 x = [|x + 1|]
+
+-- Pattern brackets
+
+mkPat = [p|(x, y)|]
+
+-- Type brackets
+
+foo :: $([t|Bool|]) -> a

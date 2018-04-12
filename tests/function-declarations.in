@@ -1,0 +1,109 @@
+-- Prefix notation for operators
+
+(+) :: Num a => a -> a -> a
+(+) a b = a
+
+-- Where clause
+
+sayHello = do
+  name <- getLine
+  putStrLn $ greeting name
+  where
+    greeting name = "Hello, " ++ name ++ "!"
+
+-- Guards and pattern guards
+
+f x
+  | x <- Just x
+  , x <- Just x =
+    case x of
+      Just x -> e
+  | otherwise = do e
+  where
+    x = y
+
+-- Multi-way if
+
+x =
+  if | x <- Just x,
+       x <- Just x ->
+       case x of
+         Just x -> e
+         Nothing -> p
+     | otherwise -> e
+
+-- Case inside a `where` and `do`
+
+g x =
+  case x of
+    a -> x
+  where
+    foo =
+      case x of
+        _ -> do
+          launchMissiles
+      where
+        y = 2
+
+-- Let inside a `where`
+
+g x =
+  let x = 1
+   in x
+  where
+    foo =
+      let y = 2
+          z = 3
+       in y
+
+-- Lists
+
+exceptions = [InvalidStatusCode, MissingContentHeader, InternalServerError]
+
+exceptions =
+  [ InvalidStatusCode
+  , MissingContentHeader
+  , InternalServerError
+  , InvalidStatusCode
+  , MissingContentHeader
+  , InternalServerError
+  ]
+
+-- Long line, function application
+
+test = do
+  alphaBetaGamma deltaEpsilonZeta etaThetaIota kappaLambdaMu nuXiOmicron piRh79
+  alphaBetaGamma deltaEpsilonZeta etaThetaIota kappaLambdaMu nuXiOmicron piRho80
+  alphaBetaGamma
+    deltaEpsilonZeta
+    etaThetaIota
+    kappaLambdaMu
+    nuXiOmicron
+    piRhoS81
+
+-- Long line, tuple
+
+test
+  (alphaBetaGamma, deltaEpsilonZeta, etaThetaIota, kappaLambdaMu, nuXiOmicro79)
+  (alphaBetaGamma, deltaEpsilonZeta, etaThetaIota, kappaLambdaMu, nuXiOmicron80)
+  ( alphaBetaGamma
+  , deltaEpsilonZeta
+  , etaThetaIota
+  , kappaLambdaMu
+  , nuXiOmicronP81)
+
+-- Long line, tuple section
+
+test
+  (, alphaBetaGamma, , deltaEpsilonZeta, , etaThetaIota, kappaLambdaMu, nu79, )
+  (, alphaBetaGamma, , deltaEpsilonZeta, , etaThetaIota, kappaLambdaMu, , n80, )
+  (
+  , alphaBetaGamma
+  ,
+  , deltaEpsilonZeta
+  ,
+  , etaThetaIota
+  , kappaLambdaMu
+  ,
+  , nu81
+  ,)

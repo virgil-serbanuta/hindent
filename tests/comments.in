@@ -1,0 +1,152 @@
+-- Comments within a declaration
+
+bob -- after bob
+ =
+  foo -- next to foo
+  -- line after foo
+    (bar
+       foo -- next to bar foo
+       bar -- next to bar
+     ) -- next to the end paren of (bar)
+    -- line after (bar)
+    mu -- next to mu
+    -- line after mu
+    -- another line after mu
+    zot -- next to zot
+    -- line after zot
+    (case casey -- after casey
+           of
+       Just -- after Just
+        -> do
+         justice -- after justice
+          *
+           foo
+             (blah * blah + z + 2 / 4 + a - -- before a line break
+              2 * -- inside this mess
+              z /
+              2 /
+              2 /
+              aooooo /
+              aaaaa -- bob comment
+              ) +
+           (sdfsdfsd fsdfsdf) -- blah comment
+         putStrLn "")
+    [1, 2, 3]
+    [ 1 -- foo
+    , ( 2 -- bar
+      , 2.5 -- mu
+       )
+    , 3
+    ]
+    -- in the end of the function
+  where
+    alpha = alpha
+    -- between alpha and beta
+    beta = beta
+    -- after beta
+
+foo = 1 -- after foo
+
+gamma = do
+  delta
+  epsilon
+  -- in the end of a do-block 1
+
+gamma = do
+  delta
+  epsilon
+  -- the very last block is detected differently
+
+-- Doesn't work yet (wrong comment position detection)
+
+gamma = do
+  -- in the beginning of a do-block
+  delta
+  where
+    -- before alpha
+    alpha = alpha
+
+-- Haddock comments
+
+-- | Module comment.
+module X where
+
+-- | Main doc.
+main :: IO ()
+main = return ()
+
+data X
+  = X -- ^ X is for xylophone.
+  | Y -- ^ Y is for why did I eat that pizza.
+
+data X = X
+  { field1 :: Int -- ^ Field1 is the first field.
+  , field11 :: Char
+    -- ^ This field comment is on its own line.
+  , field2 :: Int -- ^ Field2 is the second field.
+  , field3 :: Char -- ^ This is a long comment which starts next to
+    -- the field but continues onto the next line, it aligns exactly
+    -- with the field name.
+  , field4 :: Char
+    -- ^ This is a long comment which starts on the following line
+    -- from from the field, lines continue at the sme column.
+  }
+
+-- Comments around regular declarations
+
+-- This is some random comment.
+-- | Main entry point.
+main = putStrLn "Hello, World!"
+-- This is another random comment.
+
+-- Multi-line comments
+
+bob {- after bob -}
+ =
+  foo {- next to foo -}
+  {- line after foo -}
+    (bar
+       foo {- next to bar foo -}
+       bar {- next to bar -}
+     ) {- next to the end paren of (bar) -}
+    {- line after (bar) -}
+    mu {- next to mu -}
+    {- line after mu -}
+    {- another line after mu -}
+    zot {- next to zot -}
+    {- line after zot -}
+    (case casey {- after casey -}
+           of
+       Just {- after Just -}
+        -> do
+         justice {- after justice -}
+          *
+           foo
+             (blah * blah + z + 2 / 4 + a - {- before a line break -}
+              2 * {- inside this mess -}
+              z /
+              2 /
+              2 /
+              aooooo /
+              aaaaa {- bob comment -}
+              ) +
+           (sdfsdfsd fsdfsdf) {- blah comment -}
+         putStrLn "")
+    [1, 2, 3]
+    [ 1 {- foo -}
+    , ( 2 {- bar -}
+      , 2.5 {- mu -}
+       )
+    , 3
+    ]
+
+foo = 1 {- after foo -}
+
+-- Multi-line comments with multi-line contents
+
+{- | This is some random comment.
+Here is more docs and such.
+Etc.
+-}
+main = putStrLn "Hello, World!"
+{- This is another random comment. -}

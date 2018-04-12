@@ -1,0 +1,10 @@
+-- Monad example
+
+class A where
+  {-# MINIMAL return, ((>>=) | (join, fmap)) #-}
+
+-- Very long names #310
+
+class A where
+  {-# MINIMAL averylongnamewithnoparticularmeaning
+            | ananotherverylongnamewithnomoremeaning #-}

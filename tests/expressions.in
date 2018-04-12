@@ -1,0 +1,150 @@
+-- Lazy patterns in a lambda
+
+f = \ ~a -> undefined
+-- \~a yields parse error on input ‘\~’
+
+-- Bang patterns in a lambda
+
+f = \ !a -> undefined
+-- \!a yields parse error on input ‘\!’
+
+-- List comprehensions, short
+
+map f xs = [f x | x <- xs]
+
+-- List comprehensions, long
+
+defaultExtensions =
+  [ e
+  | EnableExtension {extensionField1 = extensionField1} <-
+      knownExtensions knownExtensions
+  , let a = b
+    -- comment
+  , let c = d
+    -- comment
+  ]
+
+-- List comprehensions with operators
+
+defaultExtensions =
+  [e | e@EnableExtension {} <- knownExtensions] \\
+  map EnableExtension badExtensions
+
+-- Parallel list comprehension, short
+
+zip xs ys = [(x, y) | x <- xs | y <- ys]
+
+-- Parallel list comprehension, long
+
+fun xs ys =
+  [ (alphaBetaGamma, deltaEpsilonZeta)
+  | x <- xs
+  , z <- zs
+  | y <- ys
+  , cond
+  , let t = t
+  ]
+
+-- Record, short
+
+getGitProvider :: EventProvider GitRecord ()
+getGitProvider =
+  EventProvider {getModuleName = "Git", getEvents = getRepoCommits}
+
+-- Record, medium
+
+commitToEvent :: FolderPath -> TimeZone -> Commit -> Event.Event
+commitToEvent gitFolderPath timezone commit =
+  Event.Event
+    {pluginName = getModuleName getGitProvider, eventIcon = "glyphicon-cog"}
+
+-- Record, long
+
+commitToEvent :: FolderPath -> TimeZone -> Commit -> Event.Event
+commitToEvent gitFolderPath timezone commit =
+  Event.Event
+    { pluginName = getModuleName getGitProvider
+    , eventIcon = "glyphicon-cog"
+    , eventDate = localTimeToUTC timezone (commitDate commit)
+    }
+
+-- Cases
+
+strToMonth :: String -> Int
+strToMonth month =
+  case month of
+    "Jan" -> 1
+    "Feb" -> 2
+    _ -> error $ "Unknown month " ++ month
+
+-- Operators, bad
+
+x =
+  Value <$> thing <*> secondThing <*> thirdThing <*> fourthThing <*>
+  Just thisissolong <*>
+  Just stilllonger <*>
+  evenlonger
+
+-- Operators, good
+
+x =
+  Value <$> thing <*> secondThing <*> thirdThing <*> fourthThing <*>
+  Just thisissolong <*> Just stilllonger <*> evenlonger
+
+-- Operator with `do`
+
+for xs $ do
+  left x
+  right x
+
+-- Operator with lambda
+
+for xs $ \x -> do
+  left x
+  right x
+
+-- Operator with lambda-case
+
+for xs $ \case
+  Left x -> x
+
+-- Transform list comprehensions
+
+list =
+  [ (x, y, map the v)
+  | x <- [1 .. 10]
+  , y <- [1 .. 10]
+  , let v = x + y
+  , then group by v using groupWith
+  , then take 10
+  , then group using permutations
+  , t <- concat v
+  , then takeWhile by t < 3
+  ]
+
+-- Type families
+
+type family Id a
+
+-- Type family annotations
+
+type family Id a :: *
+
+-- Type family instances
+
+type instance Id Int = Int
+
+-- Type family dependencies
+
+type family Id a = r | r -> a
+
+-- Binding implicit parameters
+
+f =
+  let ?x = 42
+   in f
+
+-- Closed type families
+
+type family Closed (a :: k) :: Bool where
+  Closed x = 'True
