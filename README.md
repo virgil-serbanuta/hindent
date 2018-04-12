@@ -5,7 +5,16 @@ Haskell pretty printer for RV
 To run it on our own tests file:
 
 ```
-stack build --profile && cat tests/test.in | stack exec hindent -- --indent-size 4 > tests/test.golden.new && diff tests/test.golden.new tests/test.golden
+stack build &&\
+for f in `find tests -name '*.in'`; \
+do \
+    echo $f; \
+    cat $f | stack exec hindent -- --indent-size 4 > "$f.tmp"; \
+    g=`echo -n $f | sed 's/.in/.golden/'`; \
+    echo $g
+    cp "$f.tmp" $g; \
+    rm "$f.tmp"; \
+done
 ```
 
 To run it on an entire project:

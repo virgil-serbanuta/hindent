@@ -1,0 +1,120 @@
+-- Comments within a declaration
+bob -- after bob
+ =
+    foo -- next to foo
+  -- line after foo
+        (bar foo -- next to bar foo
+             bar -- next to bar
+         ) -- next to the end paren of (bar)
+    -- line after (bar)
+        mu -- next to mu
+    -- line after mu
+    -- another line after mu
+        zot -- next to zot
+    -- line after zot
+        (case casey -- after casey
+               of
+             Just -- after Just
+              -> do
+                 justice -- after justice
+                     * foo ( blah * blah + z + 2 / 4 + a
+                         - -- before a line break
+                          2
+                         * -- inside this mess
+                          z
+                         / 2
+                         / 2
+                         / aooooo
+                         / aaaaa -- bob comment
+                         )
+                     + (sdfsdfsd fsdfsdf) -- blah comment
+                 putStrLn "")
+        [1, 2, 3]
+        [ 1 -- foo
+        , ( 2 -- bar
+          , 2.5 -- mu
+           )
+        , 3
+        ]
+    -- in the end of the function
+  where
+    alpha = alpha
+    -- between alpha and beta
+    beta = beta
+    -- after beta
+
+foo = 1 -- after foo
+
+gamma = do
+    delta
+    epsilon
+  -- in the end of a do-block 1
+
+gamma = do
+    delta
+    epsilon
+  -- the very last block is detected differently
+
+-- Doesn't work yet (wrong comment position detection)
+gamma
+  -- in the beginning of a do-block
+ = do
+    delta
+    -- before alpha
+  where
+    alpha = alpha
+
+-- Comments around regular declarations
+-- This is some random comment.
+-- | Main entry point.
+main = putStrLn "Hello, World!"
+
+-- This is another random comment.
+-- Multi-line comments
+bob {- after bob -}
+ =
+    foo {- next to foo -}
+  {- line after foo -}
+        (bar foo {- next to bar foo -}
+             bar {- next to bar -}
+         ) {- next to the end paren of (bar) -}
+    {- line after (bar) -}
+        mu {- next to mu -}
+    {- line after mu -}
+    {- another line after mu -}
+        zot {- next to zot -}
+    {- line after zot -}
+        (case casey {- after casey -}
+               of
+             Just {- after Just -}
+              -> do
+                 justice {- after justice -}
+                     * foo ( blah * blah + z + 2 / 4 + a
+                         - {- before a line break -}
+                          2
+                         * {- inside this mess -}
+                          z
+                         / 2
+                         / 2
+                         / aooooo
+                         / aaaaa {- bob comment -}
+                         )
+                     + (sdfsdfsd fsdfsdf) {- blah comment -}
+                 putStrLn "")
+        [1, 2, 3]
+        [ 1 {- foo -}
+        , ( 2 {- bar -}
+          , 2.5 {- mu -}
+           )
+        , 3
+        ]
+
+foo = 1 {- after foo -}
+
+-- Multi-line comments with multi-line contents
+{- | This is some random comment.
+Here is more docs and such.
+Etc.
+-}
+main = putStrLn "Hello, World!"
+{- This is another random comment. -}

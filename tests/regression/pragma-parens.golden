@@ -1,0 +1,3 @@
+-- TimoFreiberg INLINE (and other) pragmas for operators are reformatted without parens #415
+-- https://github.com/commercialhaskell/hindent/issues/415
+{-# NOINLINE (<>) #-}

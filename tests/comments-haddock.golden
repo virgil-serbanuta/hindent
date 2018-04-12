@@ -1,0 +1,19 @@
+-- Haddock comments
+-- | Module comment.
+module X where
+
+-- | Main doc.
+main :: IO ()
+main = return ()
+
+data X
+    = X -- ^ X is for xylophone.
+    | Y -- ^ Y is for why did I eat that pizza.
+
+data X = X
+    { field1  :: Int
+    , field11 :: Char
+    , field2  :: Int
+    , field3  :: Char
+    , field4  :: Char
+    }

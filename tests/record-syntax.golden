@@ -1,0 +1,16 @@
+-- Pattern matching, short
+fun Rec {alpha = beta, gamma = delta, epsilon = zeta, eta = theta, iota = kappa}
+  = do
+    beta + delta + zeta + theta + kappa
+-- Pattern matching, long
+fun
+    Rec { alpha = beta
+        , gamma = delta
+        , epsilon = zeta
+        , eta = theta
+        , iota = kappa
+        , lambda = mu
+        }
+  =
+    beta + delta + zeta + theta + kappa + mu + beta + delta + zeta + theta
+    + kappa

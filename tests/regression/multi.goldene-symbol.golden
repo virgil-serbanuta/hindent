@@ -1,0 +1,8 @@
+-- michalrus Multiline `GHC.TypeLits.Symbol`s are being broken #451
+-- https://github.com/commercialhaskell/hindent/issues/451
+import           GHC.TypeLits (Symbol)
+
+data X (sym :: Symbol)
+    deriving (Typeable)
+
+type Y = X "abc\n\n\ndef"

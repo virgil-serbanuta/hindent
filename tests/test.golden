@@ -1,3 +1,9 @@
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FunctionalDependencies #-}
+
 module Data.Kore.Parser.ParserImpl where
 
 import           Data.Kore.AST.Common
