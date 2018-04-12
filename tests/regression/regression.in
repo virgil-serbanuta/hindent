@@ -1,0 +1,358 @@
+-- jml Adds trailing whitespace when wrapping #221
+
+x = do
+  config <- execParser options
+  comments <-
+    case config of
+      Diff False args -> commentsFromDiff args
+      Diff True args -> commentsFromDiff ("--cached" : args)
+      Files args -> commentsFromFiles args
+  mapM_ (putStrLn . Fixme.formatTodo) (concatMap Fixme.getTodos comments)
+
+-- meditans hindent freezes when trying to format this code #222
+
+c :: forall new.
+     ( Settable "pitch" Pitch (Map.AsMap (new Map.:\ "pitch")) new
+     , Default (Book' (Map.AsMap (new Map.:\ "pitch")))
+     )
+  => Book' new
+c = set #pitch C (def :: Book' (Map.AsMap (new Map.:\ "pitch")))
+
+foo ::
+     ( Foooooooooooooooooooooooooooooooooooooooooo
+     , Foooooooooooooooooooooooooooooooooooooooooo
+     )
+  => A
+
+-- bitemyapp wonky multiline comment handling #231
+
+module Woo where
+
+hi = "hello"
+{-
+test comment
+-}
+-- blah blah
+-- blah blah
+-- blah blah
+
+-- cocreature removed from declaration issue #186
+
+-- https://github.com/chrisdone/hindent/issues/186
+trans One e n =
+  M.singleton
+    (Query Unmarked (Mark NonExistent)) -- The goal of this is to fail always
+    (emptyImage {notPresent = S.singleton (TransitionResult Two (Just A) n)})
+
+-- sheyll explicit forall in instances #218
+
+-- https://github.com/chrisdone/hindent/issues/218
+instance forall x. C
+
+instance forall x. Show x => C x
+
+-- tfausak support shebangs #208
+
+#!/usr/bin/env stack
+-- stack runghc
+main =
+ pure ()
+-- https://github.com/chrisdone/hindent/issues/208
+
+#!/usr/bin/env stack
+-- stack runghc
+main = pure ()
+-- https://github.com/chrisdone/hindent/issues/208
+
+-- radupopescu `deriving` keyword not aligned with pipe symbol for type declarations
+
+data Stuffs
+  = Things
+  | This
+  | That
+  deriving (Show)
+
+data Simple =
+  Simple
+  deriving (Show)
+
+-- sgraf812 top-level pragmas should not add an additional newline #255
+
+-- https://github.com/chrisdone/hindent/issues/255
+{-# INLINE f #-}
+f :: Int -> Int
+f n = n
+
+-- ivan-timokhin breaks operators type signatures #301
+
+-- https://github.com/chrisdone/hindent/issues/301
+(+) :: ()
+
+-- cdepillabout Long deriving clauses are not reformatted #289
+
+newtype Foo =
+  Foo Proxy
+  deriving ( Functor
+           , Applicative
+           , Monad
+           , Semigroup
+           , Monoid
+           , Alternative
+           , MonadPlus
+           , Foldable
+           , Traversable
+           )
+
+-- ivan-timokhin Breaks instances with type operators #342
+
+-- https://github.com/chrisdone/hindent/issues/342
+instance Foo (->)
+
+instance Foo (^>)
+
+instance Foo (T.<^)
+
+-- Indents record constructions and updates #358
+foo =
+  assert
+    sanityCheck
+    BomSnapshotAggr
+      { snapshot = Just bs
+      , previousId = M.bomSnapshotHistoryPreviousId . entityVal <$> bsp
+      , nextId = M.bomSnapshotHistoryNextId . entityVal <$> bsn
+      , bomEx = bx''
+      , orderSubstitutes =
+          S.fromList . map OrderSubstituteAggrByCreatedAtAsc $ subs
+      , snapshotSubstitute = msub
+      }
+
+-- neongreen "{" is lost when formatting "Foo{}" #366
+
+-- https://github.com/chrisdone/hindent/issues/366
+foo = Nothing {}
+
+-- jparoz Trailing space in list comprehension #357
+
+-- https://github.com/chrisdone/hindent/issues/357
+foo =
+  [ (x, y)
+  | x <- [1 .. 10]
+  , y <- [11 .. 20]
+  , even x
+  , even x
+  , even x
+  , even x
+  , even x
+  , odd y
+  ]
+
+-- ttuegel Record formatting applied to expressions with RecordWildCards #274
+
+-- https://github.com/chrisdone/hindent/issues/274
+foo (Bar {..}) = Bar {..}
+
+-- RecursiveDo `rec` and `mdo` keyword #328
+
+rec = undefined
+
+mdo = undefined
+
+-- sophie-h Record syntax change in 5.2.2 #393
+
+-- https://github.com/commercialhaskell/hindent/issues/393
+data X
+  = X { x :: Int }
+  | X'
+
+data X = X
+  { x :: Int
+  , x' :: Int
+  }
+
+data X
+  = X { x :: Int
+      , x' :: Int }
+  | X'
+
+-- k-bx Infix data constructor gets reformatted into a parse error #328
+
+-- https://github.com/commercialhaskell/hindent/issues/328
+data Expect =
+  String :--> String
+  deriving (Show)
+
+-- tfausak Class constraints cause too many newlines #244
+
+-- https://github.com/commercialhaskell/hindent/issues/244
+x :: Num a => a
+x = undefined
+
+-- instance
+instance Num a => C a
+
+-- long instance
+instance Nuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuum a =>
+         C a where
+  f = undefined
+
+-- expipiplus1 Always break before `::` on overlong signatures #390
+
+-- https://github.com/commercialhaskell/hindent/issues/390
+fun :: Is => Short
+fun = undefined
+
+someFunctionSignature ::
+     Wiiiiiiiiiiiiiiiiith
+  -> Enough
+  -> (Arguments -> To ())
+  -> Overflow (The Line Limit)
+
+-- duog Long Type Constraint Synonyms are not reformatted #290
+
+-- https://github.com/commercialhaskell/hindent/issues/290
+type MyContext m
+   = ( MonadState Int m
+     , MonadReader Int m
+     , MonadError Text m
+     , MonadMask m
+     , Monoid m
+     , Functor m)
+
+-- ocharles Type application differs from function application (leading to long lines) #359
+
+-- https://github.com/commercialhaskell/hindent/issues/359
+thing ::
+     ( ResB.BomEx
+     , Maybe [( Entity BomSnapshot
+              , ( [ResBS.OrderSubstituteAggr]
+                , ( Maybe (Entity BomSnapshotHistory)
+                  , Maybe (Entity BomSnapshotHistory))))])
+  -> [(ResB.BomEx, Maybe ResBS.BomSnapshotAggr)]
+
+-- NorfairKing Do as left-hand side of an infix operation #296
+
+-- https://github.com/commercialhaskell/hindent/issues/296
+block =
+  do ds <- inBraces $ inWhiteSpace declarations
+     return $ Block ds
+     <?> "block"
+
+-- NorfairKing Hindent linebreaks after very short names if the total line length goes over 80 #405
+
+-- https://github.com/commercialhaskell/hindent/issues/405
+t =
+  f "this is a very loooooooooooooooooooooooooooong string that goes over the line length"
+    argx
+    argy
+    argz
+
+t =
+  function
+    "this is a very loooooooooooooooooooooooooooong string that goes over the line length"
+    argx
+    argy
+    argz
+
+-- ivan-timokhin No linebreaks for long functional dependency declarations #323
+
+-- https://github.com/commercialhaskell/hindent/issues/323
+class Foo a b | a -> b where
+  f :: a -> b
+
+class Foo a b c d e f
+  | a b c d e -> f
+  , a b c d f -> e
+  , a b c e f -> d
+  , a b d e f -> c
+  , a c d e f -> b
+  , b c d e f -> a
+  where
+  foo :: a -> b -> c -> d -> e -> f
+
+-- utdemir Hindent breaks TH name captures of operators #412
+
+-- https://github.com/commercialhaskell/hindent/issues/412
+data T =
+  (-)
+
+q = '(-)
+
+data (-)
+
+q = ''(-)
+
+-- NorfairKing Hindent breaks servant API's #417
+
+-- https://github.com/commercialhaskell/hindent/issues/417
+type API = api1 :<|> api2
+
+-- andersk Cannot parse @: operator #421
+
+-- https://github.com/commercialhaskell/hindent/issues/421
+a @: b = a + b
+
+main = print (2 @: 2)
+
+-- andersk Corrupts parenthesized type operators #422
+
+-- https://github.com/commercialhaskell/hindent/issues/422
+data T a =
+  a :@ a
+
+test = (:@)
+
+-- NorfairKing Infix constructor pattern is broken #424
+
+-- https://github.com/commercialhaskell/hindent/issues/424
+from $ \(author `InnerJoin` post) -> pure ()
+
+-- sophie-h Regression: Breaks basic type class code by inserting "|" #459
+
+-- https://github.com/commercialhaskell/hindent/issues/459
+class Class1 a =>
+      Class2 a
+  where
+  f :: a -> Int
+
+class (Eq a, Show a) =>
+      Num a
+  where
+  (+), (-), (*) :: a -> a -> a
+  negate :: a -> a
+  abs, signum :: a -> a
+  fromInteger :: Integer -> a
+
+-- michalrus `let … in …` inside of `do` breaks compilation #467
+
+-- https://github.com/commercialhaskell/hindent/issues/467
+main :: IO ()
+main = do
+  let x = 5
+   in when (x > 0) (return ())
+
+-- sophie-h Breaking valid top-level template haskell #473
+
+-- https://github.com/commercialhaskell/hindent/issues/473
+template $
+  haskell
+    [ ''SomeVeryLongName
+    , ''AnotherLongNameEvenLongToBreakTheLine
+    , ''LastLongNameInList
+    ]
+
+-- schroffl Hindent produces invalid Syntax from FFI exports #479
+
+-- https://github.com/commercialhaskell/hindent/issues/479
+foreign export ccall "test" test :: IO ()
+
+foreign import ccall "test" test :: IO ()
+
+foreign import ccall safe "test" test :: IO ()
+
+foreign import ccall unsafe "test" test :: IO ()
+
+-- ptek Reformatting of the {-# OVERLAPPING #-} pragma #386
+
+-- https://github.com/commercialhaskell/hindent/issues/386
+instance {-# OVERLAPPING #-} Arbitrary (Set Int) where
+  arbitrary = undefined

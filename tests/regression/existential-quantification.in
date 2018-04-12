@@ -1,0 +1,9 @@
+-- DavidEichmann Existential Quantification reordered #443
+
+-- https://github.com/commercialhaskell/hindent/issues/443
+{-# LANGUAGE ExistentialQuantification #-}
+
+data D =
+  forall a b c. D a
+                  b
+                  c

@@ -1,0 +1,6 @@
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
+type m ~> n = ()
+
+class (a :< b) c
