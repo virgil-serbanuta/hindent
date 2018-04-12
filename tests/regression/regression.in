@@ -24,18 +24,6 @@ foo ::
      )
   => A
 
--- bitemyapp wonky multiline comment handling #231
-
-module Woo where
-
-hi = "hello"
-{-
-test comment
--}
--- blah blah
--- blah blah
--- blah blah
-
 -- cocreature removed from declaration issue #186
 
 -- https://github.com/chrisdone/hindent/issues/186

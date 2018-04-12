@@ -1,0 +1,10 @@
+-- bitemyapp wonky multiline comment handling #231
+module Woo where
+
+hi = "hello"
+{-
+test comment
+-}
+-- blah blah
+-- blah blah
+-- blah blah
