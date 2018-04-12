@@ -203,25 +203,25 @@ data SymbolOrAlias level = SymbolOrAlias
 data SymbolOrAlias level = SymbolOrAlias
     { symbolOrAliasConstructor :: !(Id level)
     , symbolOrAliasParams
-          :: MetaOrObject level => level -> Parser (SortVariable level)
+        :: MetaOrObject level => level -> Parser (SortVariable level)
     , symbolOrAliasParams2
-          :: MetaOrObject level
-          => level
-          -> Parser (SortVariable level)
-          -> Parser (SortVariable level)
+        :: MetaOrObject level
+        => level
+        -> Parser (SortVariable level)
+        -> Parser (SortVariable level)
     , symbolOrAliasParams3
-          :: MetaOrObject level
-          => level
-          -> Parser (SortVariable level)
-          -> Parser (SortVariable level)
-          -> Parser (SortVariable level)
+        :: MetaOrObject level
+        => level
+        -> Parser (SortVariable level)
+        -> Parser (SortVariable level)
+        -> Parser (SortVariable level)
     , symbolOrAliasParam4 :: level -> Parser (SortVariable level)
     , symbolOrAliasParams5
-          :: level -> Parser (SortVariable level) -> Parser (SortVariable level)
+        :: level -> Parser (SortVariable level) -> Parser (SortVariable level)
     , symbolOrAliasParams6
-          :: level
-          -> Parser (SortVariable level)
-          -> Parser (SortVariable level)
-          -> Parser (SortVariable level)
+        :: level
+        -> Parser (SortVariable level)
+        -> Parser (SortVariable level)
+        -> Parser (SortVariable level)
     }
     deriving (Show, Eq, Ord, Typeable)
