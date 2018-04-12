@@ -22,5 +22,5 @@ data Ty :: (* -> *) where
     TCon
         :: { field1 :: Int
            , field2 :: Bool}
-     -> Ty Bool
+        -> Ty Bool
     TCon' :: (a :: *) -> a -> Ty a

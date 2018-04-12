@@ -87,14 +87,14 @@ for xs do
 
 -- Operator with lambda
 for xs
-$ \x -> do
-    left x
-    right x
+    $ \x -> do
+        left x
+        right x
 
 -- Operator with lambda-case
 for xs
-$ \case
-    Left x -> x
+    $ \case
+        Left x -> x
 
 -- Transform list comprehensions
 list =
@@ -124,7 +124,7 @@ type family Id a = r | r -> a
 -- Binding implicit parameters
 f =
     let ?x = 42
-     in f
+    in f
 
 -- Closed type families
 type family Closed (a :: k) :: Bool where

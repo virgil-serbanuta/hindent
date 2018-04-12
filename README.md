@@ -10,7 +10,7 @@ for f in `find tests -name '*.in'`; \
 do \
     echo $f; \
     cat $f | stack exec hindent -- --indent-size 4 > "$f.tmp"; \
-    g=`echo -n $f | sed 's/.in/.golden/'`; \
+    g=`echo -n $f | sed 's/.in$/.golden/'`; \
     echo $g
     cp "$f.tmp" $g; \
     rm "$f.tmp"; \

@@ -19,7 +19,7 @@ import           Data.Kore.IndentingPrinter             (PrinterOutput,
 
 instance
     Typeable var
-     => UnifiedThing (UnifiedVariable var) var
+    => UnifiedThing (UnifiedVariable var) var
   where
     destructor (MetaVariable v)   = Left v
     destructor (ObjectVariable v) = Right v
@@ -88,7 +88,7 @@ safeChr i =
 
 firstOrderLogicWithEqualityAxioms =
     [ let forallFormula = 3
-       in 4
+        in 4
     ]
 
 firstOrderLogicWithEqualityAxiomsC
@@ -152,7 +152,7 @@ verifyAttributes
     let indentation
             | inCase = indentSpaces
             | otherwise = max 2 indentSpaces
-     in indentation
+    in indentation
 
 data Pattern level variable child where
     AndPattern :: !(And level child) -> Pattern level variable child

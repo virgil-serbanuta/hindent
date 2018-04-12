@@ -42,12 +42,12 @@ g x =
 -- Let inside a `where`
 g x =
     let x = 1
-     in x
+    in x
   where
     foo =
         let y = 2
             z = 3
-         in y
+        in y
 
 -- Lists
 exceptions = [InvalidStatusCode, MissingContentHeader, InternalServerError]
@@ -83,11 +83,12 @@ test = do
         piRhoS81
 
 -- Long line, tuple
-test ( alphaBetaGamma
-     , deltaEpsilonZeta
-     , etaThetaIota
-     , kappaLambdaMu
-     , nuXiOmicro79)
+test
+    ( alphaBetaGamma
+    , deltaEpsilonZeta
+    , etaThetaIota
+    , kappaLambdaMu
+    , nuXiOmicro79)
     ( alphaBetaGamma
     , deltaEpsilonZeta
     , etaThetaIota
@@ -100,15 +101,16 @@ test ( alphaBetaGamma
     , nuXiOmicronP81)
 
 -- Long line, tuple section
-test (
-     , alphaBetaGamma
-     ,
-     , deltaEpsilonZeta
-     ,
-     , etaThetaIota
-     , kappaLambdaMu
-     , nu79
-     ,)
+test
+    (
+    , alphaBetaGamma
+    ,
+    , deltaEpsilonZeta
+    ,
+    , etaThetaIota
+    , kappaLambdaMu
+    , nu79
+    ,)
     (
     , alphaBetaGamma
     ,
