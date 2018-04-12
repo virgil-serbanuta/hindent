@@ -66,32 +66,6 @@ gamma = do
     -- before alpha
     alpha = alpha
 
--- Haddock comments
-
--- | Module comment.
-module X where
-
--- | Main doc.
-main :: IO ()
-main = return ()
-
-data X
-  = X -- ^ X is for xylophone.
-  | Y -- ^ Y is for why did I eat that pizza.
-
-data X = X
-  { field1 :: Int -- ^ Field1 is the first field.
-  , field11 :: Char
-    -- ^ This field comment is on its own line.
-  , field2 :: Int -- ^ Field2 is the second field.
-  , field3 :: Char -- ^ This is a long comment which starts next to
-    -- the field but continues onto the next line, it aligns exactly
-    -- with the field name.
-  , field4 :: Char
-    -- ^ This is a long comment which starts on the following line
-    -- from from the field, lines continue at the sme column.
-  }
-
 -- Comments around regular declarations
 
 -- This is some random comment.
