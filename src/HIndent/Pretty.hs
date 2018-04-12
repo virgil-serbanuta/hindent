@@ -185,7 +185,8 @@ prefixedLinedGood pref ps' =
          mapM_ (\p' ->
                   do
                     newline
-                    depend (write pref) p'
+                    write pref
+                    p'
                 )
                 ps
 
@@ -614,7 +615,7 @@ exp (App _ op arg) = do
       spaces <- getIndentSpaces
       pretty f
       col' <- gets psColumn
-      let diff = col' - col - if col == 0 then spaces else 0
+      let diff = col' - col
       if diff + 1 <= spaces
         then space
         else newline
@@ -648,7 +649,7 @@ exp (Let _ binds e) =
   depend (write "let ")
          (do pretty binds
              newline
-             indented (-3) (depend (write "in ")
+             indented (-4) (depend (write "in  ")
                                    (pretty e)))
 exp (ListComp _ e qstmt) = do
   let horVariant = brackets $ do
@@ -1361,7 +1362,7 @@ instance Pretty GadtDecl where
             write ":: "
             fields' $ do
               newline
-              indented (-3) (write "-> ")
+              write "-> "
             declTy t
 
 instance Pretty Rhs where
@@ -1391,7 +1392,7 @@ instance Pretty InstRule where
          Just ctx -> do
             pretty ctx
             newline
-            write " => "
+            write "=> "
             pretty ihead
 
 instance Pretty InstHead where
@@ -2345,17 +2346,12 @@ recDecl (RecDecl _ name fields) =
       newline
       column indentSpaces
         (do
-            depend (write "{")
-              (printAligned
-                (\plen -> depend space . prettyPrefix plen)
-                (depend space . pretty)
-                (prefixedLined ",")
-                fields
-              )
-              {-
-              (prefixedLined ","
-                (map (depend space . pretty) fields))
-                -}
+            write "{ "
+            printAligned
+              prettyPrefix
+              pretty
+              (prefixedLinedGood ", ")
+              fields
             if fieldCount /= 1
               then newline
               else space
@@ -2435,16 +2431,40 @@ maxPrinter (printer:printers) =
 
 recUpdateExpr :: Printer () -> [FieldUpdate NodeInfo] -> Printer ()
 recUpdateExpr expWriter updates = do
-  ifFitsOnOneLineOrElse hor $ do
-    expWriter
-    newline
-    indentedBlock (updatesHor `ifFitsOnOneLineOrElse` updatesVer)
+  expWriter
+  case updates of
+    [] -> ifFitsOnOneLineOrElse
+      (do
+        space
+        write "{}"
+      )
+      (do
+        newline
+        indentedBlock (write "{}")
+      )
+    [update] -> ifFitsOnOneLineOrElse
+      (do
+        space
+        braces (do space; pretty update; space)
+      )
+      (do
+        newline
+        indentedBlock
+          (ifFitsOnOneLineOrElse
+            (braces (do space; pretty update; space))
+            (braces
+              (do
+                space
+                pretty update
+                newline
+              )
+            )
+          )
+      )
+    _ -> do
+      newline
+      indentedBlock updatesVer
   where
-    hor = do
-      expWriter
-      space
-      updatesHor
-    updatesHor = braces $ commas $ map pretty updates
     updatesVer = do
       depend (write "{ ") $ prefixedLined ", " $ map pretty updates
       newline

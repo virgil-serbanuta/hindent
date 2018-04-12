@@ -41,13 +41,18 @@ fun xs ys =
 -- Record, short
 getGitProvider :: EventProvider GitRecord ()
 getGitProvider =
-    EventProvider {getModuleName = "Git", getEvents = getRepoCommits}
+    EventProvider
+        { getModuleName = "Git"
+        , getEvents = getRepoCommits
+        }
 
 -- Record, medium
 commitToEvent :: FolderPath -> TimeZone -> Commit -> Event.Event
 commitToEvent gitFolderPath timezone commit =
     Event.Event
-        {pluginName = getModuleName getGitProvider, eventIcon = "glyphicon-cog"}
+        { pluginName = getModuleName getGitProvider
+        , eventIcon = "glyphicon-cog"
+        }
 
 -- Record, long
 commitToEvent :: FolderPath -> TimeZone -> Commit -> Event.Event
@@ -124,7 +129,7 @@ type family Id a = r | r -> a
 -- Binding implicit parameters
 f =
     let ?x = 42
-    in f
+    in  f
 
 -- Closed type families
 type family Closed (a :: k) :: Bool where

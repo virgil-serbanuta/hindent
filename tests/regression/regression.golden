@@ -26,7 +26,7 @@ trans One e n =
     M.singleton
         (Query Unmarked (Mark NonExistent)) -- The goal of this is to fail always
         (emptyImage
-            {notPresent = S.singleton (TransitionResult Two (Just A) n)})
+             { notPresent = S.singleton (TransitionResult Two (Just A) n) })
 
 -- sheyll explicit forall in instances #218
 -- https://github.com/chrisdone/hindent/issues/218
@@ -120,7 +120,7 @@ foo =
 
 -- ttuegel Record formatting applied to expressions with RecordWildCards #274
 -- https://github.com/chrisdone/hindent/issues/274
-foo (Bar {..}) = Bar {..}
+foo (Bar {..}) = Bar { .. }
 
 -- RecursiveDo `rec` and `mdo` keyword #328
 rec = undefined
@@ -141,8 +141,7 @@ data X = X
 
 data X
     = X { x :: Int
-        , x' :: Int
-        }
+        , x' :: Int }
     | X'
 
 -- k-bx Infix data constructor gets reformatted into a parse error #328
@@ -207,7 +206,8 @@ block =
 -- NorfairKing Hindent linebreaks after very short names if the total line length goes over 80 #405
 -- https://github.com/commercialhaskell/hindent/issues/405
 t =
-    f "this is a very loooooooooooooooooooooooooooong string that goes over the line length"
+    f
+        "this is a very loooooooooooooooooooooooooooong string that goes over the line length"
         argx
         argy
         argz
@@ -284,7 +284,7 @@ class (Eq a, Show a) =>
 main :: IO ()
 main = do
     let x = 5
-    in when (x > 0) (return ())
+    in  when (x > 0) (return ())
 
 -- sophie-h Breaking valid top-level template haskell #473
 -- https://github.com/commercialhaskell/hindent/issues/473

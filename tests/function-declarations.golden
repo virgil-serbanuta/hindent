@@ -42,12 +42,12 @@ g x =
 -- Let inside a `where`
 g x =
     let x = 1
-    in x
+    in  x
   where
     foo =
         let y = 2
             z = 3
-        in y
+        in  y
 
 -- Lists
 exceptions = [InvalidStatusCode, MissingContentHeader, InternalServerError]

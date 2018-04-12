@@ -5,7 +5,7 @@ Haskell pretty printer for RV
 To run it on our own tests file:
 
 ```
-stack build &&\
+stack build && \
 for f in `find tests -name '*.in'`; \
 do \
     echo $f; \

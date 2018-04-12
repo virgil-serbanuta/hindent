@@ -62,7 +62,7 @@ withSort
 
 deriving instance
     (Eq child, Eq (variable level))
-     => Eq (Pattern level variable child)
+    => Eq (Pattern level variable child)
 
 deriving instance Functor (Pattern level variable)
 
@@ -88,20 +88,20 @@ safeChr i =
 
 firstOrderLogicWithEqualityAxioms =
     [ let forallFormula = 3
-        in 4
+      in  4
     ]
 
 firstOrderLogicWithEqualityAxiomsC
     -- comment
  =
     [ let forallFormula = 3
-       in 4
+      in  4
     ]
 
 firstOrderLogicWithEqualityAxiomsD -- comment
  =
     [ let forallFormula = 3
-       in 4
+      in  4
     ]
 
 firstOrderLogicWithEqualityAxiomsE
@@ -121,7 +121,7 @@ firstOrderLogicWithEqualityAxiomsE
     -- comment
   =
     [ let forallFormula = 3
-       in 4
+      in  4
     ]
 
 {-|'verifyAttributes' verifies the weldefinedness of the given attributes.
@@ -152,7 +152,7 @@ verifyAttributes
     let indentation
             | inCase = indentSpaces
             | otherwise = max 2 indentSpaces
-    in indentation
+    in  indentation
 
 data Pattern level variable child where
     AndPattern :: !(And level child) -> Pattern level variable child
